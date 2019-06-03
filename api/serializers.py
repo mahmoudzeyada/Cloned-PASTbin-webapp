@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from .models import Document, SharedDocuments
+from shortner.models import UrlShortener
 
 User = get_user_model()
 
@@ -27,16 +28,17 @@ class DocumentSerializer(serializers.ModelSerializer):
         allow_null=True
     )
     document_shared_with = serializers.SerializerMethodField()
+    shortcode = serializers.SerializerMethodField()
 
     class Meta:
         model = Document
         fields = "__all__"
 
     def get_created_at(self, obj):
-        return obj.created_at.strftime("%d/%m/%Y")
+        return obj.created_at.strftime("%Y-%m-%d")
 
     def get_updated_at(self, obj):
-        return obj.updated_at.strftime("%d/%m/%Y")
+        return obj.updated_at.strftime("%Y-%m-%d")
 
     def get_time_since(self, obj):
         return timesince(obj.created_at)
@@ -48,6 +50,10 @@ class DocumentSerializer(serializers.ModelSerializer):
                       "username": doc.users.username} for doc in qs])
 
         return None
+
+    def get_shortcode(self, obj):
+        return UrlShortener.objects.filter(document=obj)\
+            .values("shortcode").first()
 
     def create(self, validated_data):
         users_to_share_with = validated_data.pop("users_to_share_with")
@@ -66,6 +72,7 @@ class DocumentSerializer(serializers.ModelSerializer):
                 user = User.objects.get(username=username)
                 SharedDocuments.objects.create(users=user, document=document)
 
+        UrlShortener.objects.create(document=document)
         return document
 
     def update(self, instance, validated_data):
