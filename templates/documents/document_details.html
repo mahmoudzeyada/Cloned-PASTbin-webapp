@@ -1,0 +1,9 @@
+<h1>past:</h1>{{document.past}}
+<br />
+<h1>owner:</h1>{{document.owner}}
+<br />
+<h1>Shared with</h1>
+
+{%for obj  in document.shared_document.all%}
+{{obj.users.username}}
+{%endfor%}
