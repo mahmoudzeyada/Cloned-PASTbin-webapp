@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
+    'shortner',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
@@ -66,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Pastebin.wsgi.application'
+WSGI_APPLICATION = 'Pastbin.wsgi.application'
 
 
 # Database
