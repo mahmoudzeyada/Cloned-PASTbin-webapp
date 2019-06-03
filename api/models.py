@@ -14,5 +14,7 @@ class Document (models.Model):
 
 class SharedDocuments(models.Model):
     users = models.ForeignKey(settings.AUTH_USER_MODEL,
-                              on_delete=models.CASCADE)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+                              on_delete=models.CASCADE,
+                              related_name="shared_users")
+    document = models.ForeignKey(
+        Document, on_delete=models.CASCADE, related_name="shared_document")
